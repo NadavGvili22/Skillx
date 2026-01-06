@@ -1,5 +1,18 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import IconButton from '@mui/material/IconButton'
+import SearchIcon from '@mui/icons-material/Search'
+import Divider from '@mui/material/Divider'
 
 const experiences = [
   {
@@ -58,125 +71,115 @@ export default function Insightx() {
   }
 
   return (
-    <section dir="rtl" lang="he" style={{ minHeight: '100vh', padding: 24, boxSizing: 'border-box', background: '#fff' }}>
-      <style>{`
-        .insight-section-title{ text-align: right; margin: 12px 0; font-size: 18px; font-weight: 700; }
-        .section-subtitle{ text-align: right; margin-bottom: 14px; color: #333; }
-        .section-title-line{ border-bottom: 1px solid #eee; padding-bottom:6px; }
-        .cadet-item{ background:#fff; padding:10px; border-radius:6px; margin-bottom:8px; text-align:right; }
-        .commander-item{ background: linear-gradient(90deg,#fff,#fffefb); border:1px solid #eee; padding:10px; border-radius:6px; margin-bottom:8px; text-align:right; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; transition: box-shadow .12s, transform .08s; }
-        .commander-item:hover{ transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
-        .tag-pill{ padding:4px 8px; border-radius:6px; white-space:nowrap; }
-        .tag-preserve{ background:#eef2ff; color:#1f3b8a; }
-        .tag-improve{ background:#fff6e6; color:#8a5a1f; }
-        .experience-name{ text-align:right; font-size:20px; margin:0 0 6px 0; }
-      `}</style>
+    <Box dir="rtl" component="section" sx={{ width: '100%', minHeight: '100vh', px: 0, py: 6, bgcolor: '#f6f7fb' }}>
+      <Typography variant="h4" align="right" gutterBottom sx={{ fontWeight: 700 }}>פריסת התנסות</Typography>
+      <Typography variant="body1" align="right" color="text.secondary" gutterBottom sx={{ mb: 3 }}>בחר/י התנסות כדי לראות נקודות שימור ושיפור וסיכום AI לכל חלק.</Typography>
 
-      <h2 className="insight-section-title">פריסת התנסות</h2>
-      <p className="section-subtitle">בחר/י התנסות כדי לראות נקודות שימור ושיפור וסיכום AI לכל חלק.</p>
+      <Grid container spacing={4} sx={{ mt: 2 }}>
+        {experiences.map(exp => (
+          <Grid item xs={12} key={exp.id}>
+            <Paper elevation={3} sx={{ p: 3, bgcolor: '#ffffff', width: '100%' }}>
+              <Typography variant="h5" align="right" sx={{ fontWeight: 700 }}>{exp.name}</Typography>
 
-      {experiences.map(exp => (
-        <article key={exp.id} style={{ position: 'relative', border: '1px solid #e0e0e0', borderRadius: 8, padding: 16, marginBottom: 20, background: '#fafafa' }}>
-          <h3 className="experience-name">{exp.name}</h3>
+              {/* Cadet feedback */}
+              {exp.cadetFeedback && (
+                <Box sx={{ mt: 2 }}>
+                  <Box sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
+                    <Typography variant="subtitle1" align="right">משוב צוערים</Typography>
+                  </Box>
+                  <Grid container spacing={3} sx={{ mt: 1 }}>
+                    <Grid item xs={12} md={6}>
+                      <Typography align="right" sx={{ mb: 1, fontWeight: 600 }}>שימור</Typography>
+                      {exp.cadetFeedback.preservation.map((p, i) => (
+                        <Paper key={i} sx={{ p: 2, mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography align="right">{p.text}</Typography>
+                            <Chip label={p.tag} size="small" color="primary" variant="outlined" sx={{ mr: 1 }} />
+                          </Box>
+                        </Paper>
+                      ))}
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography align="right" sx={{ mb: 1, fontWeight: 600 }}>שיפור</Typography>
+                      {exp.cadetFeedback.improvement.map((p, i) => (
+                        <Paper key={i} sx={{ p: 2, mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography align="right">{p.text}</Typography>
+                            <Chip label={p.tag} size="small" sx={{ bgcolor: '#fff6e6', mr: 1 }} />
+                          </Box>
+                        </Paper>
+                      ))}
+                    </Grid>
+                  </Grid>
+                  <Paper sx={{ mt: 2, p: 2, bgcolor: '#f7fbff' }}>
+                    <Typography align="right" sx={{ fontWeight: 600 }}>סיכום צוערים:</Typography>
+                    <Typography align="right">{exp.cadetFeedback.generalSummary}</Typography>
+                  </Paper>
+                </Box>
+              )}
 
-          {/* top-level preservation/improvement moved under cadetFeedback per request */}
+              {/* Commander feedback */}
+              {exp.commanderFeedback && (
+                <Box sx={{ mt: 3 }}>
+                  <Box sx={{ borderBottom: '1px solid #eee', pb: 1 }}>
+                    <Typography variant="subtitle1" align="right">משוב מפק"צים</Typography>
+                  </Box>
+                  <Grid container spacing={3} sx={{ mt: 1 }}>
+                    <Grid item xs={12} md={6}>
+                      <Typography align="right" sx={{ mb: 1, fontWeight: 600 }}>שימור</Typography>
+                      {exp.commanderFeedback.preservation.map((p, i) => (
+                        <Paper key={i} onClick={() => openModal(p.original, `מקור שימור — ${p.tag}`)} sx={{ p: 2, mb: 1, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', '&:hover': { boxShadow: 8, transform: 'translateY(-6px)' } }}>
+                          <Typography align="right" sx={{ flex: 1 }}>{p.text}</Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+                            <Chip label={p.tag} size="small" variant="outlined" sx={{ bgcolor: '#eef2ff' }} />
+                            <IconButton size="small"><SearchIcon fontSize="small" /></IconButton>
+                          </Box>
+                        </Paper>
+                      ))}
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Typography align="right" sx={{ mb: 1, fontWeight: 600 }}>שיפור</Typography>
+                      {exp.commanderFeedback.improvement.map((p, i) => (
+                        <Paper key={i} onClick={() => openModal(p.original, `מקור שיפור — ${p.tag}`)} sx={{ p: 2, mb: 1, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', '&:hover': { boxShadow: 8, transform: 'translateY(-6px)' } }}>
+                          <Typography align="right" sx={{ flex: 1 }}>{p.text}</Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+                            <Chip label={p.tag} size="small" variant="outlined" sx={{ bgcolor: '#fff6e6' }} />
+                            <IconButton size="small"><SearchIcon fontSize="small" /></IconButton>
+                          </Box>
+                        </Paper>
+                      ))}
+                    </Grid>
+                  </Grid>
 
-          {/* משוב צוערים */}
-          {exp.cadetFeedback && (
-            <section style={{ marginTop: 12 }}>
-              <div className="section-title-line">
-                <h4 className="section-subtitle">משוב צוערים</h4>
-              </div>
-              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 8 }}>
-                <div style={{ flex: 1, minWidth: 260 }}>
-                  <h5 style={{ textAlign: 'right', marginBottom: 6 }}>שימור</h5>
-                  {exp.cadetFeedback.preservation.map((p, i) => (
-                    <div key={i} className="cadet-item">{p.text} <span style={{ marginRight: 8 }} className="tag-pill tag-preserve">{p.tag}</span></div>
-                  ))}
-                </div>
+                  <Paper onClick={() => openModal(exp.commanderFeedback.originalOverall, 'מקור סיכום מפק"צים')} sx={{ mt: 2, p: 2, cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', '&:hover': { boxShadow: 8, transform: 'translateY(-6px)' } }}>
+                    <Box sx={{ flex: 1, textAlign: 'right' }}>
+                      <Typography sx={{ fontWeight: 800 }}>סיכום מפק"צים:</Typography>
+                      <Typography sx={{ mt: 0.5 }}>{exp.commanderFeedback.overallSummary}</Typography>
+                    </Box>
+                    <IconButton size="small"><SearchIcon fontSize="small" /></IconButton>
+                  </Paper>
+                </Box>
+              )}
 
-                <div style={{ flex: 1, minWidth: 260 }}>
-                  <h5 style={{ textAlign: 'right', marginBottom: 6 }}>שיפור</h5>
-                  {exp.cadetFeedback.improvement.map((p, i) => (
-                    <div key={i} className="cadet-item">{p.text} <span style={{ marginRight: 8 }} className="tag-pill tag-improve">{p.tag}</span></div>
-                  ))}
-                </div>
-              </div>
-              <div style={{ marginTop: 8, background: '#f7fbff', padding: 10, borderRadius: 6, textAlign: 'right' }}>
-                <strong>סיכום צוערים:</strong>
-                <div>{exp.cadetFeedback.generalSummary}</div>
-              </div>
-            </section>
-          )}
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                  <Button variant="contained">חזור</Button>
+                </Link>
+              </Box>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
 
-          {/* משוב מפק"צים */}
-          {exp.commanderFeedback && (
-            <section style={{ marginTop: 12 }}>
-              <div className="section-title-line">
-                <h4 className="section-subtitle">משוב מפק"צים</h4>
-              </div>
-              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 8 }}>
-                <div style={{ flex: 1, minWidth: 260 }}>
-                  <h5 style={{ textAlign: 'right', marginBottom: 6 }}>שימור</h5>
-                  {exp.commanderFeedback.preservation.map((p, i) => (
-                    <div key={i} className="commander-item" onClick={() => openModal(p.original, `מקור שימור — ${p.tag}`)}>
-                      <div style={{ flex: 1, textAlign: 'right' }}>{p.text}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 8 }}>
-                        <span className="tag-pill tag-preserve">{p.tag}</span>
-                        <span style={{ fontSize: 14, opacity: 0.85 }}>🔍</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ flex: 1, minWidth: 260 }}>
-                  <h5 style={{ textAlign: 'right', marginBottom: 6 }}>שיפור</h5>
-                  {exp.commanderFeedback.improvement.map((p, i) => (
-                    <div key={i} className="commander-item" onClick={() => openModal(p.original, `מקור שיפור — ${p.tag}`)}>
-                      <div style={{ flex: 1, textAlign: 'right' }}>{p.text}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 8 }}>
-                        <span className="tag-pill tag-improve">{p.tag}</span>
-                        <span style={{ fontSize: 14, opacity: 0.85 }}>🔍</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div onClick={() => openModal(exp.commanderFeedback.originalOverall, 'מקור סיכום מפק"צים')} style={{ marginTop: 8, cursor: 'pointer' }}>
-                <div className="commander-item" style={{ background: 'linear-gradient(90deg,#fffefb,#fff8f8)', border: '1px solid #eee' }}>
-                  <div style={{ flex: 1, textAlign: 'right' }}>
-                    <strong>סיכום מפק"צים:</strong>
-                    <div style={{ marginTop: 6 }}>{exp.commanderFeedback.overallSummary}</div>
-                  </div>
-                  <div style={{ marginLeft: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 14, opacity: 0.85 }}>🔍</span>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-        </article>
-      ))}
-
-      <div style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 20 }}>
-        <Link to="/">
-          <button style={{ padding: '8px 14px', fontSize: 14 }}>חזור</button>
-        </Link>
-      </div>
-
-      {/* Modal for commander originals */}
-      {modalOpen && (
-        <div role="dialog" aria-modal="true" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60 }} onClick={() => setModalOpen(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: 720, background: '#fff', borderRadius: 8, padding: 20, direction: 'rtl', boxSizing: 'border-box' }}>
-            <h3 style={{ marginTop: 0, textAlign: 'right' }}>{modalTitle}</h3>
-            <div style={{ whiteSpace: 'pre-wrap', textAlign: 'right' }}>{modalContent}</div>
-            <div style={{ marginTop: 12, textAlign: 'center' }}>
-              <button onClick={() => setModalOpen(false)} style={{ padding: '8px 12px' }}>סגור</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </section>
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle sx={{ textAlign: 'right' }}>{modalTitle}</DialogTitle>
+        <DialogContent dividers>
+          <Typography sx={{ whiteSpace: 'pre-wrap', textAlign: 'right' }}>{modalContent}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModalOpen(false)}>סגור</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   )
 }
