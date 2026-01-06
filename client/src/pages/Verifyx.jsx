@@ -27,11 +27,6 @@ const REPORT_REASONS = [
   { id: 'expert-needed', label: 'צריך להיות מועבר על ידי מומחה' },
 ]
 
-const ROLE_OPTIONS = [
-  { id: 'student', label: 'חניך' },
-  { id: 'teacher', label: 'איש סגל' },
-]
-
 const SEED_REPORTS = [
   {
     id: 'rep-1',
@@ -451,14 +446,6 @@ const styles = {
     background: '#fff',
     textAlign: 'right',
   },
-  textInput: {
-    padding: '8px 10px',
-    borderRadius: 10,
-    border: '1px solid #d1d5db',
-    minWidth: 200,
-    background: '#fff',
-    textAlign: 'right',
-  },
   input: {
     width: '100%',
     minHeight: 100,
@@ -531,29 +518,13 @@ const getDefaultUser = () => ({
   groupId: 'group-a',
 })
 
-const getCurrentUser = () => {
-  if (typeof window === 'undefined') {
-    return getDefaultUser()
-  }
-  const stored = window.localStorage.getItem('skillxUser')
-  if (!stored) {
-    return getDefaultUser()
-  }
-  try {
-    return JSON.parse(stored)
-  } catch (error) {
-    return getDefaultUser()
-  }
-}
-
 const getReasonLabel = (reasonId) =>
   REPORT_REASONS.find((reason) => reason.id === reasonId)?.label || reasonId || ''
 
 export default function Verifyx({ forcedRole } = {}) {
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser())
+  const currentUser = getDefaultUser()
   const role = forcedRole || currentUser.role || currentUser.type || 'student'
   const isTeacher = role === 'teacher' || role === 'admin'
-  const isRoleLocked = Boolean(forcedRole)
   const studentGroupId = currentUser.groupId || GROUPS[0].id
 
   const [reports, setReports] = useState(SEED_REPORTS)
@@ -566,11 +537,6 @@ export default function Verifyx({ forcedRole } = {}) {
   const [filterLessonId, setFilterLessonId] = useState(LESSONS[0].id)
   const [filterGroupId, setFilterGroupId] = useState(studentGroupId)
   const [isShowingReports, setIsShowingReports] = useState(false)
-  const [draftUser, setDraftUser] = useState(() => ({
-    name: currentUser.name || '',
-    role,
-    groupId: studentGroupId,
-  }))
 
   const filteredReports = useMemo(() => {
     if (!isShowingReports) {
@@ -581,28 +547,6 @@ export default function Verifyx({ forcedRole } = {}) {
       (report) => report.lessonId === filterLessonId && report.groupId === targetGroupId
     )
   }, [filterGroupId, filterLessonId, isShowingReports, isTeacher, reports, studentGroupId])
-
-  const handleSaveUser = (event) => {
-    event.preventDefault()
-    const trimmedName = draftUser.name.trim()
-    const nextUser = {
-      ...currentUser,
-      name: trimmedName || currentUser.name || 'חניך לדוגמה',
-      role: forcedRole || draftUser.role,
-      groupId: draftUser.groupId || GROUPS[0].id,
-    }
-    setCurrentUser(nextUser)
-    setDraftUser({
-      name: nextUser.name || '',
-      role: nextUser.role || 'student',
-      groupId: nextUser.groupId || GROUPS[0].id,
-    })
-    setComposeGroupId(nextUser.groupId || GROUPS[0].id)
-    setFilterGroupId(nextUser.groupId || GROUPS[0].id)
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('skillxUser', JSON.stringify(nextUser))
-    }
-  }
 
   const handleAddReport = (event) => {
     event.preventDefault()
@@ -648,73 +592,6 @@ export default function Verifyx({ forcedRole } = {}) {
             {isComposerOpen ? 'סגירת טופס דיווח' : 'הוספת דיווח'}
           </button>
         </div>
-      </div>
-
-      <div style={styles.card}>
-        <h3 style={{ marginTop: 0 }}>התחברות</h3>
-        <form onSubmit={handleSaveUser}>
-          <div style={styles.row}>
-            <div>
-              <label style={styles.label} htmlFor="user-name">
-                שם
-              </label>
-              <input
-                id="user-name"
-                type="text"
-                value={draftUser.name}
-                onChange={(event) =>
-                  setDraftUser((prev) => ({ ...prev, name: event.target.value }))
-                }
-                placeholder="שם מלא"
-                style={styles.textInput}
-              />
-            </div>
-            <div>
-              <label style={styles.label} htmlFor="user-role">
-                סוג משתמש
-              </label>
-              <select
-                id="user-role"
-                value={draftUser.role}
-                onChange={(event) =>
-                  setDraftUser((prev) => ({ ...prev, role: event.target.value }))
-                }
-                style={styles.select}
-                disabled={isRoleLocked}
-              >
-                {ROLE_OPTIONS.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label style={styles.label} htmlFor="user-group">
-                פלוגה
-              </label>
-              <select
-                id="user-group"
-                value={draftUser.groupId}
-                onChange={(event) =>
-                  setDraftUser((prev) => ({ ...prev, groupId: event.target.value }))
-                }
-                style={styles.select}
-              >
-                {GROUPS.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div style={{ alignSelf: 'flex-end' }}>
-              <button type="submit" style={styles.button}>
-                עדכון משתמש
-              </button>
-            </div>
-          </div>
-        </form>
       </div>
 
       {isComposerOpen && (
