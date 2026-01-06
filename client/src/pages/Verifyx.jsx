@@ -20,30 +20,378 @@ const GROUPS = [
   { id: 'group-c', name: 'פלוגה ג' },
 ]
 
+const REPORT_REASONS = [
+  { id: 'too-long', label: 'ארוך מדיי' },
+  { id: 'too-short', label: 'קצר מדיי' },
+  { id: 'not-relevant', label: 'לא רלוונטי' },
+  { id: 'expert-needed', label: 'צריך להיות מועבר על ידי מומחה' },
+]
+
+const ROLE_OPTIONS = [
+  { id: 'student', label: 'חניך' },
+  { id: 'teacher', label: 'איש סגל' },
+]
+
 const SEED_REPORTS = [
   {
     id: 'rep-1',
     lessonId: 'exp-logistics-officer',
     groupId: 'group-a',
     author: 'נועה לוי',
+    reason: 'too-long',
     text: 'יש לחזק את היכרות הנהלים עם מחסן הציוד.',
     createdAt: '2024-04-02T09:15:00.000Z',
   },
   {
     id: 'rep-2',
+    lessonId: 'exp-logistics-officer',
+    groupId: 'group-b',
+    author: 'אורי כהן',
+    reason: 'not-relevant',
+    text: 'התרגול סטה מהתרחיש הלוגיסטי, צריך לדייק דוגמאות.',
+    createdAt: '2024-04-02T11:40:00.000Z',
+  },
+  {
+    id: 'rep-3',
+    lessonId: 'exp-logistics-officer',
+    groupId: 'group-c',
+    author: 'דניאל שחר',
+    reason: 'too-short',
+    text: 'החלק על ניהול מלאי היה קצר מדי, צריך דוגמאות נוספות.',
+    createdAt: '2024-04-03T08:20:00.000Z',
+  },
+  {
+    id: 'rep-4',
+    lessonId: 'exp-logistics-officer',
+    groupId: 'group-a',
+    author: 'גל חזן',
+    reason: 'expert-needed',
+    text: 'נדרש להכניס מומחה ציוד לשאלות עומק.',
+    createdAt: '2024-04-04T13:05:00.000Z',
+  },
+  {
+    id: 'rep-5',
+    lessonId: 'exp-education-officer',
+    groupId: 'group-a',
+    author: 'מאיה בר',
+    reason: 'not-relevant',
+    text: 'חסר חיבור לקהל היעד, לדייק מקרים מהשטח.',
+    createdAt: '2024-04-05T10:00:00.000Z',
+  },
+  {
+    id: 'rep-6',
+    lessonId: 'exp-education-officer',
+    groupId: 'group-b',
+    author: 'אלי כהן',
+    reason: 'too-long',
+    text: 'סבב העדויות ארוך מדי, לקצר ל-2 דוגמאות.',
+    createdAt: '2024-04-05T12:25:00.000Z',
+  },
+  {
+    id: 'rep-7',
+    lessonId: 'exp-education-officer',
+    groupId: 'group-c',
+    author: 'רותם לוי',
+    reason: 'too-short',
+    text: 'החלק על ערכים הסתיים מהר, צריך תרגיל מסכם.',
+    createdAt: '2024-04-06T09:45:00.000Z',
+  },
+  {
+    id: 'rep-8',
+    lessonId: 'exp-education-officer',
+    groupId: 'group-a',
+    author: 'שירה כהן',
+    reason: 'expert-needed',
+    text: 'רצוי לשלב מרצה חיצוני בנושא תרבות ארגונית.',
+    createdAt: '2024-04-06T14:10:00.000Z',
+  },
+  {
+    id: 'rep-9',
+    lessonId: 'exp-guidance-officer',
+    groupId: 'group-a',
+    author: 'תמר מזרחי',
+    reason: 'too-long',
+    text: 'הסבר מודל ההדרכה התארך, עדיף דוגמה קצרה.',
+    createdAt: '2024-04-07T08:50:00.000Z',
+  },
+  {
+    id: 'rep-10',
+    lessonId: 'exp-guidance-officer',
+    groupId: 'group-b',
+    author: 'יואב רז',
+    reason: 'not-relevant',
+    text: 'הדוגמאות היו אקדמיות מדי, צריך מקרים מבסיס.',
+    createdAt: '2024-04-07T11:30:00.000Z',
+  },
+  {
+    id: 'rep-11',
+    lessonId: 'exp-guidance-officer',
+    groupId: 'group-c',
+    author: 'נועה לוי',
+    reason: 'too-short',
+    text: 'תרגול סימולציה קצר מדי, להאריך ל-15 דקות.',
+    createdAt: '2024-04-08T09:20:00.000Z',
+  },
+  {
+    id: 'rep-12',
+    lessonId: 'exp-guidance-officer',
+    groupId: 'group-a',
+    author: 'אלירן צור',
+    reason: 'expert-needed',
+    text: 'כדאי להביא מדריך מומחה להדרכת שטח.',
+    createdAt: '2024-04-08T13:40:00.000Z',
+  },
+  {
+    id: 'rep-13',
+    lessonId: 'exp-training-officer',
+    groupId: 'group-b',
+    author: 'גיל קדם',
+    reason: 'too-short',
+    text: 'החלק על בטיחות היה קצר מדי, להוסיף דגש.',
+    createdAt: '2024-04-09T08:05:00.000Z',
+  },
+  {
+    id: 'rep-14',
+    lessonId: 'exp-training-officer',
+    groupId: 'group-a',
+    author: 'מאיה בר',
+    reason: 'not-relevant',
+    text: 'חלק מהדוגמאות לא תואמות את רמת המתנסים.',
+    createdAt: '2024-04-09T12:15:00.000Z',
+  },
+  {
+    id: 'rep-15',
+    lessonId: 'exp-training-officer',
+    groupId: 'group-c',
+    author: 'אלי כהן',
+    reason: 'expert-needed',
+    text: 'כדאי שמאמן מומחה יעביר את פרק הקרב מגע.',
+    createdAt: '2024-04-10T10:30:00.000Z',
+  },
+  {
+    id: 'rep-16',
+    lessonId: 'exp-training-officer',
+    groupId: 'group-a',
+    author: 'דנה לוי',
+    reason: 'too-long',
+    text: 'פתיח ההיסטוריה ארוך מדי, לקצר ל-5 דקות.',
+    createdAt: '2024-04-10T14:20:00.000Z',
+  },
+  {
+    id: 'rep-17',
     lessonId: 'exp-commitment-lesson',
     groupId: 'group-b',
     author: 'אלי כהן',
+    reason: 'too-short',
     text: 'חסרה דוגמה אישית בדיון, להוסיף תרגיל מסכם.',
     createdAt: '2024-04-03T12:30:00.000Z',
   },
   {
-    id: 'rep-3',
+    id: 'rep-18',
+    lessonId: 'exp-commitment-lesson',
+    groupId: 'group-a',
+    author: 'נועה לוי',
+    reason: 'too-long',
+    text: 'סיפור הפתיחה ארוך מדי, לקצר כדי להשאיר זמן לשיח.',
+    createdAt: '2024-04-11T09:10:00.000Z',
+  },
+  {
+    id: 'rep-19',
+    lessonId: 'exp-commitment-lesson',
+    groupId: 'group-c',
+    author: 'סיון בר',
+    reason: 'expert-needed',
+    text: 'צריך שילוב יועץ ארגוני למודול המחויבות.',
+    createdAt: '2024-04-11T12:50:00.000Z',
+  },
+  {
+    id: 'rep-20',
+    lessonId: 'exp-commitment-lesson',
+    groupId: 'group-a',
+    author: 'דניאל שחר',
+    reason: 'not-relevant',
+    text: 'הדוגמאות לא מתאימות לשלב ההכשרה הנוכחי.',
+    createdAt: '2024-04-12T08:35:00.000Z',
+  },
+  {
+    id: 'rep-21',
+    lessonId: 'exp-statehood-lesson',
+    groupId: 'group-a',
+    author: 'מאיה בר',
+    reason: 'too-long',
+    text: 'הקטע ההיסטורי מתמשך מדי, לקצר ולפנות לשיח.',
+    createdAt: '2024-04-12T11:10:00.000Z',
+  },
+  {
+    id: 'rep-22',
+    lessonId: 'exp-statehood-lesson',
+    groupId: 'group-b',
+    author: 'אביב כץ',
+    reason: 'not-relevant',
+    text: 'יש לשלב דוגמאות מהיום-יום בבסיס.',
+    createdAt: '2024-04-13T09:25:00.000Z',
+  },
+  {
+    id: 'rep-23',
+    lessonId: 'exp-statehood-lesson',
+    groupId: 'group-c',
+    author: 'נועה לוי',
+    reason: 'too-short',
+    text: 'סיכום הערכים קצר מדי, להוסיף פעילות סיכום.',
+    createdAt: '2024-04-13T13:45:00.000Z',
+  },
+  {
+    id: 'rep-24',
+    lessonId: 'exp-statehood-lesson',
+    groupId: 'group-a',
+    author: 'אלי כהן',
+    reason: 'expert-needed',
+    text: 'רצוי מרצה מומחה לנושא ממלכתיות וצבא.',
+    createdAt: '2024-04-14T08:55:00.000Z',
+  },
+  {
+    id: 'rep-25',
+    lessonId: 'exp-debrief-lesson',
+    groupId: 'group-b',
+    author: 'תמר מזרחי',
+    reason: 'too-short',
+    text: 'תרגול התחקיר היה קצר, להוסיף סבב נוסף.',
+    createdAt: '2024-04-14T11:20:00.000Z',
+  },
+  {
+    id: 'rep-26',
+    lessonId: 'exp-debrief-lesson',
+    groupId: 'group-a',
+    author: 'גל חזן',
+    reason: 'not-relevant',
+    text: 'חלק מהמקרים לא רלוונטיים לתפקידם הנוכחי.',
+    createdAt: '2024-04-15T09:05:00.000Z',
+  },
+  {
+    id: 'rep-27',
+    lessonId: 'exp-debrief-lesson',
+    groupId: 'group-c',
+    author: 'דניאל שחר',
+    reason: 'expert-needed',
+    text: 'צריך קצין בטיחות שידגים תחקיר אמיתי.',
+    createdAt: '2024-04-15T13:30:00.000Z',
+  },
+  {
+    id: 'rep-28',
+    lessonId: 'exp-debrief-lesson',
+    groupId: 'group-a',
+    author: 'שירה כהן',
+    reason: 'too-long',
+    text: 'הפתיחה ארוכה מדי לפני המעבר לתרגיל.',
+    createdAt: '2024-04-16T08:40:00.000Z',
+  },
+  {
+    id: 'rep-29',
     lessonId: 'exp-identity-lesson',
     groupId: 'group-a',
     author: 'מאיה בר',
+    reason: 'too-short',
     text: 'הצגת התוכן הייתה חזקה, להוסיף סבב שיח מסכם.',
     createdAt: '2024-04-04T15:10:00.000Z',
+  },
+  {
+    id: 'rep-30',
+    lessonId: 'exp-identity-lesson',
+    groupId: 'group-b',
+    author: 'רותם לוי',
+    reason: 'too-long',
+    text: 'הסרטון הראשי ארוך מדי, לקצר לגרסה קצרה.',
+    createdAt: '2024-04-16T12:05:00.000Z',
+  },
+  {
+    id: 'rep-31',
+    lessonId: 'exp-identity-lesson',
+    groupId: 'group-c',
+    author: 'נועה לוי',
+    reason: 'expert-needed',
+    text: 'נדרש מפגש עם מרצה זהות מקצועי.',
+    createdAt: '2024-04-17T09:30:00.000Z',
+  },
+  {
+    id: 'rep-32',
+    lessonId: 'exp-identity-lesson',
+    groupId: 'group-a',
+    author: 'יואב רז',
+    reason: 'not-relevant',
+    text: 'צריך דוגמאות מחיי היומיום במקום מושגים כלליים.',
+    createdAt: '2024-04-17T14:15:00.000Z',
+  },
+  {
+    id: 'rep-33',
+    lessonId: 'exp-company-deputy',
+    groupId: 'group-a',
+    author: 'אלי כהן',
+    reason: 'too-short',
+    text: 'הסבר על תפקיד הסמ"פ קצר מדי, להעמיק.',
+    createdAt: '2024-04-18T08:10:00.000Z',
+  },
+  {
+    id: 'rep-34',
+    lessonId: 'exp-company-deputy',
+    groupId: 'group-b',
+    author: 'דנה לוי',
+    reason: 'not-relevant',
+    text: 'חלק מהנושאים לא תואמים לאחריות סמ"פ.',
+    createdAt: '2024-04-18T12:00:00.000Z',
+  },
+  {
+    id: 'rep-35',
+    lessonId: 'exp-company-deputy',
+    groupId: 'group-c',
+    author: 'מאיה בר',
+    reason: 'expert-needed',
+    text: 'כדאי שסמ"פ ותיק יציג דוגמאות מהשטח.',
+    createdAt: '2024-04-19T09:20:00.000Z',
+  },
+  {
+    id: 'rep-36',
+    lessonId: 'exp-company-deputy',
+    groupId: 'group-a',
+    author: 'אביב כץ',
+    reason: 'too-long',
+    text: 'המצגת עמוסה, לקצר ולהשאיר זמן לשאלות.',
+    createdAt: '2024-04-19T13:50:00.000Z',
+  },
+  {
+    id: 'rep-37',
+    lessonId: 'exp-weekly-commander',
+    groupId: 'group-b',
+    author: 'נועה לוי',
+    reason: 'too-long',
+    text: 'סבב החניכה ארוך מדי, לקצר לחצי זמן.',
+    createdAt: '2024-04-20T09:00:00.000Z',
+  },
+  {
+    id: 'rep-38',
+    lessonId: 'exp-weekly-commander',
+    groupId: 'group-a',
+    author: 'יואב רז',
+    reason: 'too-short',
+    text: 'סיכום השבוע קצר מדי, להוסיף משוב מובנה.',
+    createdAt: '2024-04-20T12:40:00.000Z',
+  },
+  {
+    id: 'rep-39',
+    lessonId: 'exp-weekly-commander',
+    groupId: 'group-c',
+    author: 'גל חזן',
+    reason: 'not-relevant',
+    text: 'הדוגמאות לא מתאימות למחזור הנוכחי.',
+    createdAt: '2024-04-21T08:25:00.000Z',
+  },
+  {
+    id: 'rep-40',
+    lessonId: 'exp-weekly-commander',
+    groupId: 'group-a',
+    author: 'שירה כהן',
+    reason: 'expert-needed',
+    text: 'נדרש מפקד ותיק להעביר את החלק על תחקירי שבוע.',
+    createdAt: '2024-04-21T13:10:00.000Z',
   },
 ]
 
@@ -103,6 +451,14 @@ const styles = {
     background: '#fff',
     textAlign: 'right',
   },
+  textInput: {
+    padding: '8px 10px',
+    borderRadius: 10,
+    border: '1px solid #d1d5db',
+    minWidth: 200,
+    background: '#fff',
+    textAlign: 'right',
+  },
   input: {
     width: '100%',
     minHeight: 100,
@@ -148,6 +504,18 @@ const styles = {
     border: '1px solid #e5e7eb',
     background: '#f8fafc',
   },
+  tag: {
+    padding: '4px 10px',
+    borderRadius: 999,
+    background: '#dbeafe',
+    color: '#1e3a8a',
+    fontSize: 11,
+    fontWeight: 600,
+  },
+  meta: {
+    fontSize: 12,
+    color: '#64748b',
+  },
   footer: {
     position: 'fixed',
     left: '50%',
@@ -178,21 +546,31 @@ const getCurrentUser = () => {
   }
 }
 
-export default function Verifyx() {
-  const currentUser = useMemo(() => getCurrentUser(), [])
-  const role = currentUser.role || currentUser.type || 'student'
+const getReasonLabel = (reasonId) =>
+  REPORT_REASONS.find((reason) => reason.id === reasonId)?.label || reasonId || ''
+
+export default function Verifyx({ forcedRole } = {}) {
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser())
+  const role = forcedRole || currentUser.role || currentUser.type || 'student'
   const isTeacher = role === 'teacher' || role === 'admin'
+  const isRoleLocked = Boolean(forcedRole)
   const studentGroupId = currentUser.groupId || GROUPS[0].id
 
   const [reports, setReports] = useState(SEED_REPORTS)
   const [isComposerOpen, setIsComposerOpen] = useState(false)
   const [composeLessonId, setComposeLessonId] = useState(LESSONS[0].id)
   const [composeGroupId, setComposeGroupId] = useState(studentGroupId)
+  const [composeReason, setComposeReason] = useState(REPORT_REASONS[0].id)
   const [composeText, setComposeText] = useState('')
 
   const [filterLessonId, setFilterLessonId] = useState(LESSONS[0].id)
   const [filterGroupId, setFilterGroupId] = useState(studentGroupId)
   const [isShowingReports, setIsShowingReports] = useState(false)
+  const [draftUser, setDraftUser] = useState(() => ({
+    name: currentUser.name || '',
+    role,
+    groupId: studentGroupId,
+  }))
 
   const filteredReports = useMemo(() => {
     if (!isShowingReports) {
@@ -203,6 +581,28 @@ export default function Verifyx() {
       (report) => report.lessonId === filterLessonId && report.groupId === targetGroupId
     )
   }, [filterGroupId, filterLessonId, isShowingReports, isTeacher, reports, studentGroupId])
+
+  const handleSaveUser = (event) => {
+    event.preventDefault()
+    const trimmedName = draftUser.name.trim()
+    const nextUser = {
+      ...currentUser,
+      name: trimmedName || currentUser.name || 'חניך לדוגמה',
+      role: forcedRole || draftUser.role,
+      groupId: draftUser.groupId || GROUPS[0].id,
+    }
+    setCurrentUser(nextUser)
+    setDraftUser({
+      name: nextUser.name || '',
+      role: nextUser.role || 'student',
+      groupId: nextUser.groupId || GROUPS[0].id,
+    })
+    setComposeGroupId(nextUser.groupId || GROUPS[0].id)
+    setFilterGroupId(nextUser.groupId || GROUPS[0].id)
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('skillxUser', JSON.stringify(nextUser))
+    }
+  }
 
   const handleAddReport = (event) => {
     event.preventDefault()
@@ -216,6 +616,7 @@ export default function Verifyx() {
       lessonId: composeLessonId,
       groupId: targetGroupId,
       author: currentUser.name || 'לא ידוע',
+      reason: composeReason,
       text,
       createdAt: new Date().toISOString(),
     }
@@ -247,6 +648,73 @@ export default function Verifyx() {
             {isComposerOpen ? 'סגירת טופס דיווח' : 'הוספת דיווח'}
           </button>
         </div>
+      </div>
+
+      <div style={styles.card}>
+        <h3 style={{ marginTop: 0 }}>התחברות</h3>
+        <form onSubmit={handleSaveUser}>
+          <div style={styles.row}>
+            <div>
+              <label style={styles.label} htmlFor="user-name">
+                שם
+              </label>
+              <input
+                id="user-name"
+                type="text"
+                value={draftUser.name}
+                onChange={(event) =>
+                  setDraftUser((prev) => ({ ...prev, name: event.target.value }))
+                }
+                placeholder="שם מלא"
+                style={styles.textInput}
+              />
+            </div>
+            <div>
+              <label style={styles.label} htmlFor="user-role">
+                סוג משתמש
+              </label>
+              <select
+                id="user-role"
+                value={draftUser.role}
+                onChange={(event) =>
+                  setDraftUser((prev) => ({ ...prev, role: event.target.value }))
+                }
+                style={styles.select}
+                disabled={isRoleLocked}
+              >
+                {ROLE_OPTIONS.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label style={styles.label} htmlFor="user-group">
+                פלוגה
+              </label>
+              <select
+                id="user-group"
+                value={draftUser.groupId}
+                onChange={(event) =>
+                  setDraftUser((prev) => ({ ...prev, groupId: event.target.value }))
+                }
+                style={styles.select}
+              >
+                {GROUPS.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {group.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div style={{ alignSelf: 'flex-end' }}>
+              <button type="submit" style={styles.button}>
+                עדכון משתמש
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
       {isComposerOpen && (
@@ -297,6 +765,23 @@ export default function Verifyx() {
                   </div>
                 </div>
               )}
+              <div>
+                <label style={styles.label} htmlFor="compose-reason">
+                  סיבה עיקרית
+                </label>
+                <select
+                  id="compose-reason"
+                  value={composeReason}
+                  onChange={(event) => setComposeReason(event.target.value)}
+                  style={styles.select}
+                >
+                  {REPORT_REASONS.map((reason) => (
+                    <option key={reason.id} value={reason.id}>
+                      {reason.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div style={{ marginTop: 16 }}>
               <label style={styles.label} htmlFor="compose-text">
@@ -388,8 +873,19 @@ export default function Verifyx() {
                       {lesson?.name || report.lessonId} · {group?.name || report.groupId}
                     </div>
                     <div style={{ marginTop: 6 }}>{report.text}</div>
-                    <div style={{ marginTop: 8, fontSize: 12, color: '#64748b' }}>
-                      {report.author} · {new Date(report.createdAt).toLocaleString('he-IL')}
+                    <div
+                      style={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 8,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={styles.tag}>סיבה: {getReasonLabel(report.reason)}</span>
+                      <span style={styles.meta}>
+                        {report.author} · {new Date(report.createdAt).toLocaleString('he-IL')}
+                      </span>
                     </div>
                   </div>
                 )
