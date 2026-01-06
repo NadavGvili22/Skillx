@@ -1,6 +1,6 @@
-import React from 'react'
-import { Routes, Route, Link, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import Insightx from './pages/Insightx'
+import SkillTrackX from './pages/SkillTrackX/index'
 import Verifyx from './pages/Verifyx'
 
 export default function App() {
@@ -15,6 +15,8 @@ export default function App() {
           <nav>
             <Link to="/insightx" style={{ marginRight: 10 }}>Insightx</Link>
             <Link to="/verifyx">Verifyx</Link>
+            <Link to="/SkillTrackX"> SkillTrackX </Link>
+
           </nav>
         </header>
       )}
@@ -23,6 +25,8 @@ export default function App() {
         <Routes>
           <Route path="/insightx" element={<Insightx />} />
           <Route path="/verifyx" element={<Verifyx />} />
+          <Route path="/SkillTrackX" element={<SkillTrackX />} />
+
           <Route path="/" element={<div>Welcome — open /insightx or /verifyx</div>} />
         </Routes>
       </main>
