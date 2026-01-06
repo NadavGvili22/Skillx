@@ -1,0 +1,18 @@
+.stx-root { max-width: 1100px; margin: 0 auto; font-family: system-ui, Arial, sans-serif; }
+.stx-header { display:flex; align-items:center; justify-content:space-between; gap:20px }
+.stx-header h2 { margin: 0 }
+.stx-sub { color: #555; margin: 0 }
+.stx-actions { display:flex; gap:10px }
+.stx-btn { background:#0366d6; color:#fff; padding:8px 12px; border-radius:6px; text-decoration:none }
+.stx-link { align-self:center; color:#0366d6 }
+.stx-main { display:flex; gap:24px; margin-top:18px }
+.stx-left { width: 360px; background:#f7f7f8; padding:14px; border-radius:8px }
+.stx-right { flex:1 }
+.stx-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px }
+.stx-card { border:1px solid #e3e3e3; padding:12px; border-radius:8px; background:#fff }
+.stx-card-title { margin:0 0 6px 0 }
+.stx-card-meta { font-size:12px; color:#666 }
+.stx-card-desc { margin:8px 0 }
+.stx-topics { margin:0; padding-left:18px; color:#333 }
+.stx-curriculum .stx-module { margin-bottom:12px }
+.stx-lessons { margin:6px 0 0 18px }
