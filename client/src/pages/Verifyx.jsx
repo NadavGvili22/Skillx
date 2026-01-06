@@ -2,41 +2,47 @@ import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const LESSONS = [
-  { id: 'lesson-math', name: 'Math' },
-  { id: 'lesson-physics', name: 'Physics' },
-  { id: 'lesson-history', name: 'History' },
-  { id: 'lesson-english', name: 'English' },
+  { id: 'exp-logistics-officer', name: 'קצין לוגיסטיקה' },
+  { id: 'exp-education-officer', name: 'קצין חינוך' },
+  { id: 'exp-guidance-officer', name: 'קצין הדרכה' },
+  { id: 'exp-training-officer', name: 'קצין אימונים' },
+  { id: 'exp-commitment-lesson', name: 'שיעור מחוייבות' },
+  { id: 'exp-statehood-lesson', name: 'שיעור ממלכתיות' },
+  { id: 'exp-debrief-lesson', name: 'שיעור תחקיר' },
+  { id: 'exp-identity-lesson', name: 'שיעור זהות' },
+  { id: 'exp-company-deputy', name: 'סמ"פ' },
+  { id: 'exp-weekly-commander', name: 'מפקד מתנסה שבועי' },
 ]
 
 const GROUPS = [
-  { id: 'group-a', name: 'Group A' },
-  { id: 'group-b', name: 'Group B' },
-  { id: 'group-c', name: 'Group C' },
+  { id: 'group-a', name: 'פלוגה א' },
+  { id: 'group-b', name: 'פלוגה ב' },
+  { id: 'group-c', name: 'פלוגה ג' },
 ]
 
 const SEED_REPORTS = [
   {
     id: 'rep-1',
-    lessonId: 'lesson-math',
+    lessonId: 'exp-logistics-officer',
     groupId: 'group-a',
-    author: 'Noa Levi',
-    text: 'Struggled with fractions. Need extra practice set.',
+    author: 'נועה לוי',
+    text: 'יש לחזק את היכרות הנהלים עם מחסן הציוד.',
     createdAt: '2024-04-02T09:15:00.000Z',
   },
   {
     id: 'rep-2',
-    lessonId: 'lesson-physics',
+    lessonId: 'exp-commitment-lesson',
     groupId: 'group-b',
-    author: 'Eli Cohen',
-    text: 'Lab report incomplete, missed the measurements table.',
+    author: 'אלי כהן',
+    text: 'חסרה דוגמה אישית בדיון, להוסיף תרגיל מסכם.',
     createdAt: '2024-04-03T12:30:00.000Z',
   },
   {
     id: 'rep-3',
-    lessonId: 'lesson-history',
+    lessonId: 'exp-identity-lesson',
     groupId: 'group-a',
-    author: 'Maya Bar',
-    text: 'Great presentation on the timeline activity.',
+    author: 'מאיה בר',
+    text: 'הצגת התוכן הייתה חזקה, להוסיף סבב שיח מסכם.',
     createdAt: '2024-04-04T15:10:00.000Z',
   },
 ]
@@ -48,6 +54,8 @@ const styles = {
     boxSizing: 'border-box',
     background: 'linear-gradient(120deg, #f8f4e8 0%, #f1f6ff 100%)',
     color: '#1f2937',
+    direction: 'rtl',
+    textAlign: 'right',
   },
   header: {
     display: 'flex',
@@ -93,6 +101,7 @@ const styles = {
     border: '1px solid #d1d5db',
     minWidth: 200,
     background: '#fff',
+    textAlign: 'right',
   },
   input: {
     width: '100%',
@@ -101,6 +110,7 @@ const styles = {
     borderRadius: 10,
     border: '1px solid #d1d5db',
     resize: 'vertical',
+    textAlign: 'right',
   },
   button: {
     padding: '10px 16px',
@@ -148,7 +158,7 @@ const styles = {
 
 const getDefaultUser = () => ({
   id: 'user-1',
-  name: 'Student Demo',
+  name: 'חניך לדוגמה',
   role: 'student',
   groupId: 'group-a',
 })
@@ -205,7 +215,7 @@ export default function Verifyx() {
       id: `rep-${Date.now()}`,
       lessonId: composeLessonId,
       groupId: targetGroupId,
-      author: currentUser.name || 'Unknown',
+      author: currentUser.name || 'לא ידוע',
       text,
       createdAt: new Date().toISOString(),
     }
@@ -217,36 +227,36 @@ export default function Verifyx() {
     <section style={styles.page}>
       <div style={styles.header}>
         <div>
-          <h2 style={styles.title}>Reports Workspace</h2>
+          <h2 style={styles.title}>מרחב דיווחים</h2>
           <p style={styles.subTitle}>
-            Submit problems and review reports by lesson and group.
+            שליחת בעיות וסיכומים לפי התנסות ופלוגה.
           </p>
         </div>
         <div style={styles.row}>
           <span style={styles.badge}>
-            {isTeacher ? 'Teacher' : 'Student'} {currentUser.name ? `· ${currentUser.name}` : ''}
+            {isTeacher ? 'מפקד' : 'חניך'} {currentUser.name ? `· ${currentUser.name}` : ''}
           </span>
           <span style={styles.badge}>
-            {isTeacher ? 'Admin' : 'Standard'} account
+            {isTeacher ? 'מנהל' : 'רגיל'} חשבון
           </span>
           <button
             type="button"
             style={styles.button}
             onClick={() => setIsComposerOpen((prev) => !prev)}
           >
-            {isComposerOpen ? 'Close report form' : 'Add report'}
+            {isComposerOpen ? 'סגירת טופס דיווח' : 'הוספת דיווח'}
           </button>
         </div>
       </div>
 
       {isComposerOpen && (
         <div style={styles.card}>
-          <h3 style={{ marginTop: 0 }}>New report</h3>
+          <h3 style={{ marginTop: 0 }}>דיווח חדש</h3>
           <form onSubmit={handleAddReport}>
             <div style={styles.row}>
               <div>
                 <label style={styles.label} htmlFor="compose-lesson">
-                  Lesson
+                  התנסות
                 </label>
                 <select
                   id="compose-lesson"
@@ -264,7 +274,7 @@ export default function Verifyx() {
               {isTeacher ? (
                 <div>
                   <label style={styles.label} htmlFor="compose-group">
-                    Group
+                    פלוגה
                   </label>
                   <select
                     id="compose-group"
@@ -281,7 +291,7 @@ export default function Verifyx() {
                 </div>
               ) : (
                 <div>
-                  <label style={styles.label}>Group</label>
+                  <label style={styles.label}>פלוגה</label>
                   <div style={styles.badge}>
                     {GROUPS.find((group) => group.id === studentGroupId)?.name || studentGroupId}
                   </div>
@@ -290,19 +300,19 @@ export default function Verifyx() {
             </div>
             <div style={{ marginTop: 16 }}>
               <label style={styles.label} htmlFor="compose-text">
-                Report text
+                טקסט דיווח
               </label>
               <textarea
                 id="compose-text"
                 value={composeText}
                 onChange={(event) => setComposeText(event.target.value)}
-                placeholder=" Write the problem or progress note..."
+                placeholder="כתבו את הבעיה או הסיכום..."
                 style={styles.input}
               />
             </div>
             <div style={{ marginTop: 16 }}>
               <button type="submit" style={styles.button}>
-                Submit report
+                שליחת דיווח
               </button>
             </div>
           </form>
@@ -310,11 +320,11 @@ export default function Verifyx() {
       )}
 
       <div style={styles.card}>
-        <h3 style={{ marginTop: 0 }}>Find reports</h3>
+        <h3 style={{ marginTop: 0 }}>איתור דיווחים</h3>
         <div style={styles.row}>
           <div>
             <label style={styles.label} htmlFor="filter-lesson">
-              Lesson
+              התנסות
             </label>
             <select
               id="filter-lesson"
@@ -332,7 +342,7 @@ export default function Verifyx() {
           {isTeacher ? (
             <div>
               <label style={styles.label} htmlFor="filter-group">
-                Group
+                פלוגה
               </label>
               <select
                 id="filter-group"
@@ -349,7 +359,7 @@ export default function Verifyx() {
             </div>
           ) : (
             <div>
-              <label style={styles.label}>Group</label>
+              <label style={styles.label}>פלוגה</label>
               <div style={styles.badge}>
                 {GROUPS.find((group) => group.id === studentGroupId)?.name || studentGroupId}
               </div>
@@ -360,14 +370,14 @@ export default function Verifyx() {
             style={styles.buttonGhost}
             onClick={() => setIsShowingReports(true)}
           >
-            Show reports
+            הצגת דיווחים
           </button>
         </div>
 
         {isShowingReports ? (
           <div style={styles.reportsList}>
             {filteredReports.length === 0 ? (
-              <div style={styles.reportItem}>No reports for this selection yet.</div>
+              <div style={styles.reportItem}>אין דיווחים לבחירה הזו עדיין.</div>
             ) : (
               filteredReports.map((report) => {
                 const lesson = LESSONS.find((item) => item.id === report.lessonId)
@@ -379,7 +389,7 @@ export default function Verifyx() {
                     </div>
                     <div style={{ marginTop: 6 }}>{report.text}</div>
                     <div style={{ marginTop: 8, fontSize: 12, color: '#64748b' }}>
-                      {report.author} · {new Date(report.createdAt).toLocaleString()}
+                      {report.author} · {new Date(report.createdAt).toLocaleString('he-IL')}
                     </div>
                   </div>
                 )
@@ -388,14 +398,14 @@ export default function Verifyx() {
           </div>
         ) : (
           <p style={{ marginTop: 12, color: '#64748b' }}>
-            Choose lesson and group, then press "Show reports".
+            בחרו התנסות ופלוגה ואז לחצו על "הצגת דיווחים".
           </p>
         )}
       </div>
 
       <div style={styles.footer}>
         <Link to="/">
-          <button style={{ padding: '8px 14px', fontSize: 14 }}>Return</button>
+          <button style={{ padding: '8px 14px', fontSize: 14 }}>חזרה</button>
         </Link>
       </div>
     </section>
