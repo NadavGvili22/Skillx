@@ -1,5 +1,4 @@
-import React from 'react'
-import { Routes, Route, Link, useLocation } from 'react-router-dom'
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import Insightx from './pages/Insightx'
 import Verifyx from './pages/Verifyx'
 import VerifyxStaff from './pages/VerifyxStaff'
